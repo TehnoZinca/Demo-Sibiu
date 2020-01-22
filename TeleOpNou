@@ -23,19 +23,23 @@ public class  TeleOpNou extends LinearOpMode {
     private Servo LegoStanga1 = null;
     private  Servo LegoStanga2 = null;
     private Servo LegoDreapta1 = null;
+    public Servo ServomotorE = null;
+    public Servo ServomotorV = null;
+    public Servo Caramida = null;
     private  Servo LegoDreapta2 = null;
     private  Servo Grip = null;
+    private  CRServo Parcare = null;
+    private  Servo Mascota = null;
     private DcMotor ColectorE = null;
     private DcMotor ColectorV = null;
     private DcMotor CulisataOrizontala=null;
     private DcMotor CulisantaVerticala=null;
     DigitalChannel  TouchDreapta;
     DigitalChannel  TouchStanga;
+    DigitalChannel  TouchCulisanta;
     double ok=0;
     double  power   = 1;
     double FranaS,FranaD;
-    public Servo ServomotorE = null;
-    public Servo ServomotorV = null;
     double k=0;
 
 
@@ -56,12 +60,15 @@ public class  TeleOpNou extends LinearOpMode {
         CulisataOrizontala= hardwareMap.get(DcMotor.class, "CulisantaOrizontala");
         CulisantaVerticala= hardwareMap.get(DcMotor.class, "CulisantaVerticala");
         ServomotorE = hardwareMap.servo.get("Servo_SpateE");
+        Mascota = hardwareMap.servo.get("mascota");
+        Parcare = hardwareMap.crservo.get("parcare");
         ServomotorV = hardwareMap.servo.get("Servo_SpateV");
         LegoStanga1 = hardwareMap.servo.get("LegoStanga1");
         LegoStanga2 = hardwareMap.servo.get("LegoStanga2");
         LegoDreapta1 = hardwareMap.servo.get("LegoDreapta1");
         LegoDreapta2 = hardwareMap.servo.get("LegoDreapta2");
         Grip=hardwareMap.servo.get("Grip");
+        Caramida = hardwareMap.servo.get("Caramida");
 
         TleftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         TrightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -69,6 +76,7 @@ public class  TeleOpNou extends LinearOpMode {
         BleftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ColectorE.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ColectorV.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //CulisataOrizontala.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 
@@ -77,9 +85,11 @@ public class  TeleOpNou extends LinearOpMode {
         BleftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         TouchStanga = hardwareMap.get(DigitalChannel.class, "TouchStanga");
         TouchDreapta = hardwareMap.get(DigitalChannel.class, "TouchDreapta");
+        TouchCulisanta = hardwareMap.get(DigitalChannel.class, "TouchCulisanta");
         // set the digital channel to input.
         TouchStanga.setMode(DigitalChannel.Mode.INPUT);
         TouchDreapta.setMode(DigitalChannel.Mode.INPUT);
+        TouchCulisanta.setMode(DigitalChannel.Mode.INPUT);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -126,7 +136,7 @@ public class  TeleOpNou extends LinearOpMode {
                 CurbaSpate(power, FranaD, FranaS);
 
                 if (gamepad1.start)
-                    power = 1;
+                    power = 0.5;
                 if (!gamepad1.dpad_down) {
                     TleftDrive.setPower(0);
                     BleftDrive.setPower(0);
@@ -214,11 +224,39 @@ public class  TeleOpNou extends LinearOpMode {
                     break;
                 }
             }
+            while(gamepad1.start && gamepad1.left_bumper)
+            {
+                TleftDrive.setPower(0.3);
+                BleftDrive.setPower(0.3);
+                TrightDrive.setPower(-0.3);
+                BrightDrive.setPower(-0.3);
+                if (!gamepad1.left_bumper) {
+                    TleftDrive.setPower(0);
+                    BleftDrive.setPower(0);
+                    TrightDrive.setPower(0);
+                    BrightDrive.setPower(0);
+                    break;
+                }
+            }
+            while(gamepad1.start && gamepad1.right_bumper)
+            {
+                TleftDrive.setPower(-0.3);
+                BleftDrive.setPower(-0.3);
+                TrightDrive.setPower(0.3);
+                BrightDrive.setPower(0.3);
+                if (!gamepad1.right_bumper) {
+                    TleftDrive.setPower(0);
+                    BleftDrive.setPower(0);
+                    TrightDrive.setPower(0);
+                    BrightDrive.setPower(0);
+                    break;
+                }
+            }
             while (gamepad1.left_bumper) {
-                TleftDrive.setPower(1);
-                BleftDrive.setPower(1);
-                TrightDrive.setPower(-1);
-                BrightDrive.setPower(-1);
+                TleftDrive.setPower(0.8);
+                BleftDrive.setPower(0.8);
+                TrightDrive.setPower(-0.8);
+                BrightDrive.setPower(-0.8);
                 if (!gamepad1.left_bumper) {
                     TleftDrive.setPower(0);
                     BleftDrive.setPower(0);
@@ -228,10 +266,10 @@ public class  TeleOpNou extends LinearOpMode {
                 }
             }
             while (gamepad1.right_bumper) {
-                TleftDrive.setPower(-1);
-                BleftDrive.setPower(-1);
-                TrightDrive.setPower(1);
-                BrightDrive.setPower(1);
+                TleftDrive.setPower(-0.8);
+                BleftDrive.setPower(-0.8);
+                TrightDrive.setPower(0.8);
+                BrightDrive.setPower(0.8);
                 if (!gamepad1.right_bumper) {
                     TleftDrive.setPower(0);
                     BleftDrive.setPower(0);
@@ -250,13 +288,14 @@ public class  TeleOpNou extends LinearOpMode {
                 }
             }
             while(gamepad2.left_bumper)
-            {
+            { telemetry.update();
                 CulisataOrizontala.setPower(-0.8);
                 if(!gamepad2.left_bumper)
                 {
                     CulisataOrizontala.setPower(0);
                     break;
                 }
+
             }
             if(gamepad2.dpad_left)
             {
@@ -264,30 +303,67 @@ public class  TeleOpNou extends LinearOpMode {
             }
             if(gamepad2.dpad_right)
             {
-                Grip.setPosition(0.3);
-            }
-            while(gamepad2.dpad_up)
-            {
-                if (TouchDreapta.getState() == true) {
-                    telemetry.addData("TouchDreapta", "Is Not Pressed");
-                    CulisantaVerticala.setPower(-1);
-                }
-                else
-                    telemetry.addData("TouchDreapta", "Is Pressed");
-                CulisantaVerticala.setPower(0);
-                telemetry.update();
+                Grip.setPosition(0.4);
             }
             while(gamepad2.dpad_down)
             {
-                if (TouchStanga.getState() == true) {
-                    telemetry.addData("TouchStanga", "Is Not Pressed");
-                    CulisantaVerticala.setPower(0.8);
+                CulisantaVerticala.setPower(-1);
+                ColectorE.setPower(0);
+                ColectorV.setPower(0);
+                if(!gamepad2.dpad_down)
+                {CulisantaVerticala.setPower(-1);
+                break;
                 }
-                else
-                    telemetry.addData("TouchStanga", "Is Pressed");
-                CulisantaVerticala.setPower(0);
-                telemetry.update();
             }
+            while(gamepad2.dpad_up)
+            {
+                    CulisantaVerticala.setPower(0.5);
+                    ColectorE.setPower(0);
+                    ColectorV.setPower(0);
+                if(!gamepad2.dpad_up)
+                {CulisantaVerticala.setPower(0);
+                break;
+                }
+            }
+            if(gamepad2.b)
+                Mascota.setPosition(0.4);
+            if(gamepad2.x)
+                Mascota.setPosition(-0.4);
+
+            while(gamepad2.a)
+            {
+                Parcare.setPower(0.8);
+                if(!gamepad2.a)
+                {
+                    Parcare.setPower(0);
+                    break;
+                }
+            }
+            while(gamepad2.y)
+            {
+                Parcare.setPower(-0.8);
+                if(!gamepad2.y)
+                {
+                    Parcare.setPower(0);
+                    break;
+                }
+            }
+            if(gamepad2.start) {
+                ServomotorE.setPosition(0.5);
+                ServomotorV.setPosition(0.5);
+            }
+            if(gamepad2.back) {
+                ServomotorE.setPosition(0.2);
+                ServomotorV.setPosition(0.2);
+            }
+            if(gamepad2.right_stick_button)
+            {
+                Caramida.setPosition(0.6);
+                sleep(1000);
+                Caramida.setPosition(0);//spate;
+
+            }
+
 
         }
     }
