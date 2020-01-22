@@ -25,8 +25,6 @@ public class TavaRosu extends LinearOpMode {
     public DcMotor MotorSF = null;
     public DcMotor MotorDJ = null;
     public DcMotor MotorSJ = null;
-    public Servo Servomotor1 = null;
-    public Servo Servomotor2 = null;
     public Servo ServomotorE = null;
     public Servo ServomotorV = null;
     BNO055IMU imu;
@@ -51,10 +49,9 @@ public class TavaRosu extends LinearOpMode {
         MotorDF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //am regasit printe elementele robotului conectate le hub cele 4 motoare
 
-        Servomotor1 = hardwareMap.servo.get("Servo1");
-        Servomotor2 = hardwareMap.servo.get("Servo2");
-        ServomotorE = hardwareMap.servo.get("Servo_spateE");
-        ServomotorV = hardwareMap.servo.get("Servo_spateV");
+
+        ServomotorE = hardwareMap.servo.get("Servo_SpateE");
+        ServomotorV = hardwareMap.servo.get("Servo_SpateV");
         //servomotorul
         MotorSF.setDirection(DcMotorSimple.Direction.REVERSE);
         MotorSJ.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -79,9 +76,8 @@ public class TavaRosu extends LinearOpMode {
         telemetry.addData("Mode", "running");
         telemetry.update();
 
-        Servomotor2.setPosition(1);
 
-        Laterala1Dreapta(0.3,450);
+        Laterala1Dreapta(0.3,225);
         //trebuie deplasat 74 de cm din est catre vest
         while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -96,7 +92,7 @@ public class TavaRosu extends LinearOpMode {
         MotorDJ.setPower(0);
         sleep(500);
 
-        Catretava1(0.3,2100);
+        Catretava1(0.3,2000);
         while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             telemetry.addData("Heading: ", angles.firstAngle);
@@ -113,12 +109,9 @@ public class TavaRosu extends LinearOpMode {
         ServomotorE.setPosition(0.5);
         ServomotorV.setPosition(0.5);
         sleep(1000);
-        MotorSF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        MotorSJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        MotorDF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        MotorDJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        Inainte(0.4,845);
+
+        Inainte(0.4,750);
         while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             telemetry.addData("Heading: ", angles.firstAngle);
@@ -137,7 +130,7 @@ public class TavaRosu extends LinearOpMode {
         MotorDJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-        CurbaFataStanga(1,0.5,3550);
+        CurbaFataStanga(0.5,0.2,2000);
         while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             telemetry.addData("Heading: ", angles.firstAngle);
@@ -155,7 +148,7 @@ public class TavaRosu extends LinearOpMode {
         MotorDF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         MotorDJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        RotireS(0.4,450);
+        Inainte(0.4, -550);
         while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             telemetry.addData("Heading: ", angles.firstAngle);
@@ -173,7 +166,25 @@ public class TavaRosu extends LinearOpMode {
         MotorDF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         MotorDJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        Catretava1(0.4,1150);
+        CurbaFataStanga(0.5, 0.2, 1000);
+        while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            telemetry.addData("Heading: ", angles.firstAngle);
+            telemetry.addData("Roll: ", angles.secondAngle);
+            telemetry.addData("Pitch", angles.thirdAngle);
+            telemetry.update();
+        }
+        MotorSF.setPower(0);
+        MotorSJ.setPower(0);
+        MotorDF.setPower(0);
+        MotorDJ.setPower(0);
+        sleep(500);
+        MotorSF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorSJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorDF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorDJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        Catretava1(0.4, 700);
         while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             telemetry.addData("Heading: ", angles.firstAngle);
@@ -191,7 +202,8 @@ public class TavaRosu extends LinearOpMode {
         ServomotorV.setPosition(0.2);
         sleep(500);
 
-        Inainte(0.3,2650);
+        Laterala1Dreapta(0.5, 250);
+        //trebuie deplasat 74 de cm din est catre vest
         while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             telemetry.addData("Heading: ", angles.firstAngle);
@@ -204,6 +216,35 @@ public class TavaRosu extends LinearOpMode {
         MotorDF.setPower(0);
         MotorDJ.setPower(0);
         sleep(500);
+
+        Inainte(0.3, 2650);
+        while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            telemetry.addData("Heading: ", angles.firstAngle);
+            telemetry.addData("Roll: ", angles.secondAngle);
+            telemetry.addData("Pitch", angles.thirdAngle);
+            telemetry.update();
+        }
+        MotorSF.setPower(0);
+        MotorSJ.setPower(0);
+        MotorDF.setPower(0);
+        MotorDJ.setPower(0);
+        sleep(500);
+
+        Laterala1Dreapta(0.7, 250);
+        //trebuie deplasat 74 de cm din est catre vest
+        while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            telemetry.addData("Heading: ", angles.firstAngle);
+            telemetry.addData("Roll: ", angles.secondAngle);
+            telemetry.addData("Pitch", angles.thirdAngle);
+            telemetry.update();
+        }
+        MotorSF.setPower(0);
+        MotorSJ.setPower(0);
+        MotorDF.setPower(0);
+        MotorDJ.setPower(0);
+
 
     }
 
