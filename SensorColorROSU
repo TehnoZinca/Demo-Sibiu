@@ -3,43 +3,19 @@ package org.firstinspires.ftc.teamcode;
 import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import java.util.Locale;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
 /*
  * This is an example LinearOpMode that shows how to use
  * the REV Robotics Color-Distance Sensor.
@@ -57,11 +33,12 @@ public class SensorColorROSU extends LinearOpMode {
     private  Servo LegoStanga2 = null;
     private Servo LegoDreapta1 = null;
     private  Servo LegoDreapta2 = null;
+    private DistanceSensor sensorRange;
     public DcMotor MotorDF = null;
     public DcMotor MotorSF = null;
     public DcMotor MotorDJ = null;
     public DcMotor MotorSJ = null;
-    double ok=0,k=0,nuvede=0;
+    double ok=0,k=0,nuvede=0,t=1,u=1;
     BNO055IMU imu;
     Orientation angles;
     ColorSensor sensorColorD;
@@ -70,11 +47,12 @@ public class SensorColorROSU extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         //am configurat gyroul integrat si i-am definit unitatea de masura
 
-
+        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
         MotorDF = hardwareMap.dcMotor.get("Tright_drive");
         MotorDJ = hardwareMap.dcMotor.get("Bright_drive");
         MotorSF = hardwareMap.dcMotor.get("Tleft_drive");
@@ -93,7 +71,8 @@ public class SensorColorROSU extends LinearOpMode {
         MotorSJ.setDirection(DcMotorSimple.Direction.REVERSE);
         //am declarat ca motoarele de pe partea stanga se vormisca in sens invers
 
-        MotorSF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);        MotorSJ.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        MotorSF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        MotorSJ.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         MotorDF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         MotorDJ.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -135,13 +114,7 @@ public class SensorColorROSU extends LinearOpMode {
 
         // wait for the start button to be pressed.
         waitForStart();
-
-        // loop and read the RGB and distance data.
-        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
         while (opModeIsActive()) {
-            // convert the RGB values to HSV values.
-            // multiply by the SCALE_FACTOR.
-            // then cast it back to int (SCALE_FACTOR is a double)
             Color.RGBToHSV((int) (sensorColorD.red() * SCALE_FACTOR),
                     (int) (sensorColorD.green() * SCALE_FACTOR),
                     (int) (sensorColorD.blue() * SCALE_FACTOR),
@@ -151,10 +124,6 @@ public class SensorColorROSU extends LinearOpMode {
                     (int) (sensorColorS.blue() * SCALE_FACTOR),
                     hsvValues);
 
-            // send the info back to driver station using telemetry function.
-            // telemetry.addData("Distance (cm)",
-            //             String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            //telemetry.addData("Alpha", sensorColorD.alpha());
 
 
 
@@ -178,7 +147,17 @@ public class SensorColorROSU extends LinearOpMode {
 
 
 
-            Diagonala(0.3, -2910);
+
+
+
+
+
+
+
+
+
+
+            Diagonala(0.4, -2910);
             while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 telemetry.addData("Heading: ", angles.firstAngle);
@@ -190,12 +169,12 @@ public class SensorColorROSU extends LinearOpMode {
             MotorSJ.setPower(0);
             MotorDF.setPower(0);
             MotorDJ.setPower(0);
-            sleep(500);
+            sleep(200);
             LegoStanga1.setPosition(-0.7); //se lasa
             sleep(500);
             LegoStanga2.setPosition(-0.9); //se lasa
             sleep(500);
-            Fata(0.3, -200);
+            Fata(0.3, -180);
             while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 telemetry.addData("Heading: ", angles.firstAngle);
@@ -221,7 +200,7 @@ public class SensorColorROSU extends LinearOpMode {
             g=sensorColorD.green();
             b=sensorColorD.blue();
             if((r*g)/(b*b)<=3)//sau <=2 depinde de senzor
-            { LegoStanga1.setPosition(0.8);//agata caramida
+            { LegoStanga1.setPosition(0.7);//agata caramida
                 sleep(1000);
                 //LegoStanga2.setPosition(0.5); //se ridica
                 //sleep(2000);
@@ -229,7 +208,7 @@ public class SensorColorROSU extends LinearOpMode {
             }
             if(ok==1) {
                 nuvede=1;
-                Fata(0.3, 530);
+                Fata(0.3, 480);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -242,6 +221,7 @@ public class SensorColorROSU extends LinearOpMode {
                 MotorDF.setPower(0);
                 MotorDJ.setPower(0);
                 sleep(200);
+
 
                 Laterala(0.8, 5400);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
@@ -259,13 +239,15 @@ public class SensorColorROSU extends LinearOpMode {
 
                 LegoStanga1.setPosition(-0.7);
                 sleep(200);
-                LegoStanga2.setPosition(0.6);//bratul mare care se ridica!!!!!;
-                sleep(500);
+                LegoStanga2.setPosition(0.2);//bratul mare care se ridica!!!!!;
+                sleep(200);
                 LegoStanga1.setPosition(0.7);
                 sleep(200);
+                LegoStanga2.setPosition(0.5);//bratul mare care se ridica!!!!!;
+                sleep(200);
 
-                Laterala(0.5, -3605);
-                while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+                Laterala1(0.6, -3580);
+                while (opModeIsActive()&& !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
                     telemetry.addData("Roll: ", angles.secondAngle);
@@ -278,27 +260,66 @@ public class SensorColorROSU extends LinearOpMode {
                 MotorDJ.setPower(0);
                 sleep(500);
 
-                LegoStanga1.setPosition(-0.7); //se lasa
-                sleep(500);
-                LegoStanga2.setPosition(-0.9); //se lasa
-                sleep(500);
 
-                Fata(0.3, -480);
-                while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
-                    angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                    telemetry.addData("Heading: ", angles.firstAngle);
-                    telemetry.addData("Roll: ", angles.secondAngle);
-                    telemetry.addData("Pitch", angles.thirdAngle);
-                    telemetry.update();
+                if(sensorRange.getDistance(DistanceUnit.MM)>100)
+                {
+                    Lego();
+                    while(sensorRange.getDistance(DistanceUnit.MM)>85) {
+                        Fata(0.7, -150);
+                        while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+                            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                            telemetry.addData("Heading: ", angles.firstAngle);
+                            telemetry.addData("Roll: ", angles.secondAngle);
+                            telemetry.addData("Pitch", angles.thirdAngle);
+                            telemetry.update();
+                        }
+                        MotorSF.setPower(0);
+                        MotorSJ.setPower(0);
+                        MotorDF.setPower(0);
+                        MotorDJ.setPower(0);
+                        sleep(50);
+                        telemetry.update();
+                        telemetry.addData("deviceName",sensorRange.getDeviceName());
+                        telemetry.addData("range", String.format("%.01f mm", sensorRange.getDistance(DistanceUnit.MM)));
+
+                    }
+
+                    LegoStanga1.setPosition(0.7); //se lasa
+                    sleep(500);
+
+                    t=0;
+
                 }
-                MotorSF.setPower(0);
-                MotorSJ.setPower(0);
-                MotorDF.setPower(0);
-                MotorDJ.setPower(0);
-                sleep(200);
-                LegoStanga1.setPosition(0.9); //se lasa
-                sleep(500);
-                Fata(0.5, 550);
+
+                if(sensorRange.getDistance(DistanceUnit.MM)<100 && t==1)
+                {
+                    while(sensorRange.getDistance(DistanceUnit.MM)<100) {
+                        Fata(0.5, 100);
+                        while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+                            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                            telemetry.addData("Heading: ", angles.firstAngle);
+                            telemetry.addData("Roll: ", angles.secondAngle);
+                            telemetry.addData("Pitch", angles.thirdAngle);
+                            telemetry.update();
+                        }
+                        MotorSF.setPower(0);
+                        MotorSJ.setPower(0);
+                        MotorDF.setPower(0);
+                        MotorDJ.setPower(0);
+                        sleep(200);
+                        telemetry.update();
+                        telemetry.addData("deviceName",sensorRange.getDeviceName());
+                        telemetry.addData("range", String.format("%.01f mm", sensorRange.getDistance(DistanceUnit.MM)));
+
+                    }
+                    Lego();
+                    LegoStanga1.setPosition(0.7); //se lasa
+                    sleep(500);
+
+                }
+
+
+                Fata(0.5, 470);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -312,7 +333,7 @@ public class SensorColorROSU extends LinearOpMode {
                 MotorDJ.setPower(0);
                 sleep(200);
 
-                Laterala(0.8, 3600);
+                Laterala(0.8, 3700);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -325,13 +346,16 @@ public class SensorColorROSU extends LinearOpMode {
                 MotorDF.setPower(0);
                 MotorDJ.setPower(0);
                 sleep(200);
-                LegoStanga1.setPosition(-0.9);
+                LegoStanga1.setPosition(-0.7);
                 sleep(200);
-                LegoStanga2.setPosition(0.6);
+                LegoStanga2.setPosition(0.2);//bratul mare care se ridica!!!!!;
                 sleep(200);
-                LegoStanga1.setPosition(0.5);
+                LegoStanga1.setPosition(0.7);
                 sleep(200);
-                Diagonala(0.3, -300);
+                LegoStanga2.setPosition(0.5);//bratul mare care se ridica!!!!!;
+                sleep(200);
+
+                Fata(0.5, -300);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -343,8 +367,8 @@ public class SensorColorROSU extends LinearOpMode {
                 MotorSJ.setPower(0);
                 MotorDF.setPower(0);
                 MotorDJ.setPower(0);
-                sleep(100);
-                Laterala(1, -1000);
+                sleep(200);
+                Laterala(0.5, -1300);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -377,6 +401,49 @@ public class SensorColorROSU extends LinearOpMode {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             Fata(0.3, 50);
             while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -385,6 +452,7 @@ public class SensorColorROSU extends LinearOpMode {
                 telemetry.addData("Pitch", angles.thirdAngle);
                 telemetry.update();
             }
+
             Laterala(0.3, 560);
             while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -406,30 +474,25 @@ public class SensorColorROSU extends LinearOpMode {
             g1=sensorColorD.green();
             b1=sensorColorD.blue();
             if((r1*g1)/(b1*b1)<=3)//sau <=2 depinde de senzor
-            { LegoStanga1.setPosition(0.9);//agata caramida
-                sleep(1000);
+            {   Fata(0.5, -100);
+                while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+                    angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                    telemetry.addData("Heading: ", angles.firstAngle);
+                    telemetry.addData("Roll: ", angles.secondAngle);
+                    telemetry.addData("Pitch", angles.thirdAngle);
+                    telemetry.update();
+                }
+
+                LegoStanga1.setPosition(0.7);//agata caramida
+                sleep(700);
                 //LegoStanga2.setPosition(0.5); //se ridica
                 //sleep(2000);
                 k=1;
 
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             if(k==1)
             {nuvede=1;
-                Fata(0.3, 350);
+                Fata(0.5, 400);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -437,27 +500,7 @@ public class SensorColorROSU extends LinearOpMode {
                     telemetry.addData("Pitch", angles.thirdAngle);
                     telemetry.update();
                 }
-                Laterala(0.8, 4610);
-                while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
-                    angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                    telemetry.addData("Heading: ", angles.firstAngle);
-                    telemetry.addData("Roll: ", angles.secondAngle);
-                    telemetry.addData("Pitch", angles.thirdAngle);
-                    telemetry.update();
-                }
-                MotorSF.setPower(0);
-                MotorSJ.setPower(0);
-                MotorDF.setPower(0);
-                MotorDJ.setPower(0);
-                sleep(100);
-                LegoStanga1.setPosition(-0.9);
-                sleep(100);
-                LegoStanga2.setPosition(0.6);
-                sleep(100);
-                LegoStanga1.setPosition(0.8);
-                sleep(100);
-
-                Laterala(0.5, -3000);
+                Laterala(0.8, 4660);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -471,27 +514,16 @@ public class SensorColorROSU extends LinearOpMode {
                 MotorDJ.setPower(0);
                 sleep(100);
 
-                LegoStanga1.setPosition(-0.9); //se lasa
-                sleep(300);
-                LegoStanga2.setPosition(-0.7); //se lasa
-                sleep(300);
+                LegoStanga1.setPosition(-0.7);
+                sleep(200);
+                LegoStanga2.setPosition(0.2);//bratul mare care se ridica!!!!!;
+                sleep(200);
+                LegoStanga1.setPosition(0.7);
+                sleep(200);
+                LegoStanga2.setPosition(0.5);//bratul mare care se ridica!!!!!;
+                sleep(200);
 
-                Fata(0.3, -450);
-                while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
-                    angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                    telemetry.addData("Heading: ", angles.firstAngle);
-                    telemetry.addData("Roll: ", angles.secondAngle);
-                    telemetry.addData("Pitch", angles.thirdAngle);
-                    telemetry.update();
-                }
-                MotorSF.setPower(0);
-                MotorSJ.setPower(0);
-                MotorDF.setPower(0);
-                MotorDJ.setPower(0);
-                sleep(100);
-                LegoStanga1.setPosition(0.9); //se lasa
-                sleep(300);
-                Fata(0.5, 550);
+                Lateralat(0.5, -3150);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -505,7 +537,7 @@ public class SensorColorROSU extends LinearOpMode {
                 MotorDJ.setPower(0);
                 sleep(100);
 
-                Laterala(0.8, 3600);
+                Fata(0.5, 70);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -517,15 +549,78 @@ public class SensorColorROSU extends LinearOpMode {
                 MotorSJ.setPower(0);
                 MotorDF.setPower(0);
                 MotorDJ.setPower(0);
-                sleep(200);
-                LegoStanga1.setPosition(-0.9);
-                sleep(200);
-                LegoStanga2.setPosition(0.6);
-                sleep(200);
-                LegoStanga1.setPosition(0.8);
-                sleep(200);
-                sleep(1000);
-                Diagonala(0.3, -300);
+                sleep(50);
+
+                telemetry.update();
+                telemetry.addData("deviceName",sensorRange.getDeviceName());
+                telemetry.addData("range", String.format("%.01f mm", sensorRange.getDistance(DistanceUnit.MM)));
+
+                if(sensorRange.getDistance(DistanceUnit.MM)>100)
+                {
+                    Lego();
+                    while(sensorRange.getDistance(DistanceUnit.MM)>85) {
+                        Fata(0.7, -150);
+                        while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+                            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                            telemetry.addData("Heading: ", angles.firstAngle);
+                            telemetry.addData("Roll: ", angles.secondAngle);
+                            telemetry.addData("Pitch", angles.thirdAngle);
+                            telemetry.update();
+                        }
+                        MotorSF.setPower(0);
+                        MotorSJ.setPower(0);
+                        MotorDF.setPower(0);
+                        MotorDJ.setPower(0);
+                        sleep(50);
+                        telemetry.update();
+                        telemetry.addData("deviceName",sensorRange.getDeviceName());
+                        telemetry.addData("range", String.format("%.01f mm", sensorRange.getDistance(DistanceUnit.MM)));
+
+                    }
+
+                    LegoStanga1.setPosition(0.7); //se lasa
+                    sleep(500);
+
+                    t=0;
+
+                }
+
+                if(sensorRange.getDistance(DistanceUnit.MM)<100 && t==1)
+                {
+                    while(sensorRange.getDistance(DistanceUnit.MM)<100) {
+                        Fata(0.5, 100);
+                        while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+                            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                            telemetry.addData("Heading: ", angles.firstAngle);
+                            telemetry.addData("Roll: ", angles.secondAngle);
+                            telemetry.addData("Pitch", angles.thirdAngle);
+                            telemetry.update();
+                        }
+                        MotorSF.setPower(0);
+                        MotorSJ.setPower(0);
+                        MotorDF.setPower(0);
+                        MotorDJ.setPower(0);
+                        sleep(200);
+                        telemetry.update();
+                        telemetry.addData("deviceName",sensorRange.getDeviceName());
+                        telemetry.addData("range", String.format("%.01f mm", sensorRange.getDistance(DistanceUnit.MM)));
+
+                    }
+                    Lego();
+                    LegoStanga1.setPosition(0.7); //se lasa
+                    sleep(500);
+
+                }
+
+
+
+
+
+
+
+
+
+                Fata(0.5, 470);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -538,7 +633,32 @@ public class SensorColorROSU extends LinearOpMode {
                 MotorDF.setPower(0);
                 MotorDJ.setPower(0);
                 sleep(100);
-                Laterala(1, -1500);
+
+                Laterala(0.8, 3400);
+                while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+                    angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                    telemetry.addData("Heading: ", angles.firstAngle);
+                    telemetry.addData("Roll: ", angles.secondAngle);
+                    telemetry.addData("Pitch", angles.thirdAngle);
+                    telemetry.update();
+                }
+                MotorSF.setPower(0);
+                MotorSJ.setPower(0);
+                MotorDF.setPower(0);
+                MotorDJ.setPower(0);
+                sleep(100);
+
+                LegoStanga1.setPosition(-0.7);
+                sleep(200);
+                LegoStanga2.setPosition(0.2);//bratul mare care se ridica!!!!!;
+                sleep(200);
+                LegoStanga1.setPosition(0.7);
+                sleep(200);
+                LegoStanga2.setPosition(0.5);//bratul mare care se ridica!!!!!;
+                sleep(200);
+
+
+                Laterala(0.7, -1500);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -565,8 +685,34 @@ public class SensorColorROSU extends LinearOpMode {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                   if(nuvede==0) {
-                      Laterala(0.3, 500);
+                      Laterala(0.5, 540);
                       while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                           angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                           telemetry.addData("Heading: ", angles.firstAngle);
@@ -574,38 +720,27 @@ public class SensorColorROSU extends LinearOpMode {
                           telemetry.addData("Pitch", angles.thirdAngle);
                           telemetry.update();
                       }
-                      LegoStanga1.setPosition(0.9);//agata caramida
+                      Fata(0.5, -120);
+                      while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+                          angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                          telemetry.addData("Heading: ", angles.firstAngle);
+                          telemetry.addData("Roll: ", angles.secondAngle);
+                          telemetry.addData("Pitch", angles.thirdAngle);
+                          telemetry.update();
+                      }
+                      LegoStanga1.setPosition(0.7);//agata caramida
                       sleep(500);
 
-                      Fata(0.3, 350);
-                      while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
-                          angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                          telemetry.addData("Heading: ", angles.firstAngle);
-                          telemetry.addData("Roll: ", angles.secondAngle);
-                          telemetry.addData("Pitch", angles.thirdAngle);
-                          telemetry.update();
-                      }
-                      Laterala(0.8, 4610);
-                      while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
-                          angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                          telemetry.addData("Heading: ", angles.firstAngle);
-                          telemetry.addData("Roll: ", angles.secondAngle);
-                          telemetry.addData("Pitch", angles.thirdAngle);
-                          telemetry.update();
-                      }
-                      MotorSF.setPower(0);
-                      MotorSJ.setPower(0);
-                      MotorDF.setPower(0);
-                      MotorDJ.setPower(0);
-                      sleep(200);
-                      LegoStanga1.setPosition(-0.9);
-                      sleep(200);
-                      LegoStanga2.setPosition(0.6);
-                      sleep(200);
-                      LegoStanga1.setPosition(0.8);
-                      sleep(200);
 
-                      Laterala(0.5, -2900);
+                      Fata(0.4, 370);
+                      while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+                          angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                          telemetry.addData("Heading: ", angles.firstAngle);
+                          telemetry.addData("Roll: ", angles.secondAngle);
+                          telemetry.addData("Pitch", angles.thirdAngle);
+                          telemetry.update();
+                      }
+                      Laterala2(0.8, 4510);
                       while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                           angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                           telemetry.addData("Heading: ", angles.firstAngle);
@@ -619,12 +754,17 @@ public class SensorColorROSU extends LinearOpMode {
                       MotorDJ.setPower(0);
                       sleep(200);
 
-                      LegoStanga1.setPosition(-0.9); //se lasa
+                      LegoStanga1.setPosition(-0.7);
                       sleep(200);
-                      LegoStanga2.setPosition(-0.7); //se lasa
+                      LegoStanga2.setPosition(0.2);//bratul mare care se ridica!!!!!;
+                      sleep(200);
+                      LegoStanga1.setPosition(0.7);
+                      sleep(200);
+                      LegoStanga2.setPosition(0.5);//bratul mare care se ridica!!!!!;
                       sleep(200);
 
-                      Fata(0.3, -450);
+
+                      Lateralay(0.4, -2760);
                       while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                           angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                           telemetry.addData("Heading: ", angles.firstAngle);
@@ -637,9 +777,8 @@ public class SensorColorROSU extends LinearOpMode {
                       MotorDF.setPower(0);
                       MotorDJ.setPower(0);
                       sleep(200);
-                      LegoStanga1.setPosition(0.9); //se lasa
-                      sleep(200);
-                      Fata(0.5, 650);
+                      Lego();
+                      Fata(0.3, -370);
                       while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                           angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                           telemetry.addData("Heading: ", angles.firstAngle);
@@ -653,7 +792,11 @@ public class SensorColorROSU extends LinearOpMode {
                       MotorDJ.setPower(0);
                       sleep(100);
 
-                      Laterala(0.8, 3000);
+                      LegoStanga1.setPosition(0.7);
+                      sleep(700);
+
+
+                      Fata(0.5, 530);
                       while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                           angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                           telemetry.addData("Heading: ", angles.firstAngle);
@@ -666,11 +809,42 @@ public class SensorColorROSU extends LinearOpMode {
                       MotorDF.setPower(0);
                       MotorDJ.setPower(0);
                       sleep(100);
-                      LegoStanga1.setPosition(-0.9);
+
+                      Laterala(0.9, 2400);
+                      while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+                          angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                          telemetry.addData("Heading: ", angles.firstAngle);
+                          telemetry.addData("Roll: ", angles.secondAngle);
+                          telemetry.addData("Pitch", angles.thirdAngle);
+                          telemetry.update();
+                      }
+                      MotorSF.setPower(0);
+                      MotorSJ.setPower(0);
+                      MotorDF.setPower(0);
+                      MotorDJ.setPower(0);
                       sleep(100);
-                      LegoStanga2.setPosition(0.6);
-                      sleep(100);
-                      LegoStanga1.setPosition(0.8);
+
+                      LegoStanga1.setPosition(-0.7);
+                      sleep(200);
+                      LegoStanga2.setPosition(0.2);//bratul mare care se ridica!!!!!;
+                      sleep(200);
+                      LegoStanga1.setPosition(0.7);
+                      sleep(200);
+                      LegoStanga2.setPosition(0.5);//bratul mare care se ridica!!!!!;
+                      sleep(200);
+
+                     Fata(0.7, -200);
+                      while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
+                          angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                          telemetry.addData("Heading: ", angles.firstAngle);
+                          telemetry.addData("Roll: ", angles.secondAngle);
+                          telemetry.addData("Pitch", angles.thirdAngle);
+                          telemetry.update();
+                      }
+                      MotorSF.setPower(0);
+                      MotorSJ.setPower(0);
+                      MotorDF.setPower(0);
+                      MotorDJ.setPower(0);
                       sleep(100);
                       Laterala(1, -1300);
                       while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
@@ -681,7 +855,16 @@ public class SensorColorROSU extends LinearOpMode {
                           telemetry.update();
                       }
 
+                      break;
+
                   }
+
+
+
+
+
+
+
 
 
 
@@ -758,7 +941,81 @@ public class SensorColorROSU extends LinearOpMode {
         MotorDF.setPower(p);
         MotorDJ.setPower(0);
     }
-    public void Laterala(double p,int t){
+    public void Laterala1(double p,int t) {
+        MotorSF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorSJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorDF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorDJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        MotorSF.setTargetPosition(t);
+        MotorSJ.setTargetPosition(-t);
+        MotorDF.setTargetPosition(-t);
+        MotorDJ.setTargetPosition(t);
+
+
+        MotorSF.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        MotorSJ.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        MotorDF.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        MotorDJ.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        MotorSF.setPower(p);
+        MotorSJ.setPower(p);
+        MotorDF.setPower(p);//0,1;//0.05
+        MotorDJ.setPower(p+0.1);//baterie descarcata 0.15
+    }
+    public void Lateralat(double p,int t) {
+        MotorSF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorSJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorDF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorDJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        MotorSF.setTargetPosition(t);
+        MotorSJ.setTargetPosition(-t);
+        MotorDF.setTargetPosition(-t);
+        MotorDJ.setTargetPosition(t);
+
+
+        MotorSF.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        MotorSJ.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        MotorDF.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        MotorDJ.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        MotorSF.setPower(p);
+        MotorSJ.setPower(p);
+        MotorDF.setPower(p+0.1);//0,1;//0.05
+        MotorDJ.setPower(p);//baterie descarcata 0.15
+    }
+
+    public void Lego() {
+        LegoStanga1.setPosition(-0.7); //se lasa
+        sleep(300);
+        LegoStanga2.setPosition(-0.9); //se lasa
+        sleep(300);
+    }
+
+    public void Laterala2(double p,int t) {
+        MotorSF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorSJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorDF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorDJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        MotorSF.setTargetPosition(t);
+        MotorSJ.setTargetPosition(-t);
+        MotorDF.setTargetPosition(-t);
+        MotorDJ.setTargetPosition(t);
+
+
+        MotorSF.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        MotorSJ.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        MotorDF.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        MotorDJ.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        MotorSF.setPower(p+0.1);
+        MotorSJ.setPower(p+0.15);
+        MotorDF.setPower(p);
+        MotorDJ.setPower(p);
+    }
+    public void Lateralay(double p,int t) {
         MotorSF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         MotorSJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         MotorDF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -779,8 +1036,31 @@ public class SensorColorROSU extends LinearOpMode {
         MotorSJ.setPower(p);
         MotorDF.setPower(p);
         MotorDJ.setPower(p);
+    }
+
+    public void Laterala(double p,int t){
+        MotorSF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorSJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorDF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MotorDJ.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        MotorSF.setTargetPosition(t);
+        MotorSJ.setTargetPosition(-t);
+        MotorDF.setTargetPosition(-t);
+        MotorDJ.setTargetPosition(t);
+
+
+        MotorSF.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        MotorSJ.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        MotorDF.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        MotorDJ.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        MotorSF.setPower(p);
+        MotorSJ.setPower(p+0.1);
+        MotorDF.setPower(p);
+        MotorDJ.setPower(p+0.03);
         if(t>0) {
-            if ((t - MotorDF.getCurrentPosition() > (t - 50)) && (t - MotorDJ.getCurrentPosition() < (t - 50)) && (t - MotorSF.getCurrentPosition() < (t - 50)) && (t - MotorSJ.getCurrentPosition() > (t - 50))) {
+            if ((t - MotorDF.getCurrentPosition() > (t - 150)) && (t - MotorDJ.getCurrentPosition() < (t - 150)) && (t - MotorSF.getCurrentPosition() < (t - 150)) && (t - MotorSJ.getCurrentPosition() > (t - 150))) {
                 p = 0;
                 MotorDF.setPower(0);
                 MotorDF.setPower(0);
@@ -789,7 +1069,7 @@ public class SensorColorROSU extends LinearOpMode {
             }
         }
         if(t<0) {
-            if ((t - MotorDF.getCurrentPosition() < (t - 50)) && (t - MotorDJ.getCurrentPosition() > (t - 50)) && (t - MotorSF.getCurrentPosition() > (t - 50)) && (t - MotorSJ.getCurrentPosition() < (t - 50))) {
+            if ((t - MotorDF.getCurrentPosition() < (t - 150)) && (t - MotorDJ.getCurrentPosition() > (t - 150)) && (t - MotorSF.getCurrentPosition() > (t - 150)) && (t - MotorSJ.getCurrentPosition() < (t - 150))) {
                 p = 0;
                 MotorDF.setPower(0);
                 MotorDF.setPower(0);
