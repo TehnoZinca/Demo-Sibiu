@@ -311,7 +311,7 @@ public class  TeleOpNou extends LinearOpMode {
                 ColectorE.setPower(0);
                 ColectorV.setPower(0);
                 if(!gamepad2.dpad_down)
-                {CulisantaVerticala.setPower(-1);
+                {CulisantaVerticala.setPower(0);
                 break;
                 }
             }
