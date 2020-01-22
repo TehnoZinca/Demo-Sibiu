@@ -159,9 +159,10 @@ public class SensorColorALB extends LinearOpMode {
             MotorDF.setPower(0);
             MotorDJ.setPower(0);
             sleep(500);
+
             LegoDreapta1.setPosition(0.5); //se lasa ala la caramida
             sleep(500);
-            LegoDreapta2.setPosition(0.7); //se lasa ala mare lung
+            LegoDreapta2.setPosition(0.65); //se lasa ala mare lung
             sleep(500);
 
             Fata(0.3, -200);
@@ -186,7 +187,7 @@ public class SensorColorALB extends LinearOpMode {
             g=sensorColorS.green();
             b=sensorColorS.blue();
             if((r*g)/(b*b)<=3)//sau <=2 depinde de senzor
-            { LegoDreapta1.setPosition(-0.7);//agata caramida
+            { LegoDreapta1.setPosition(-0.68);//agata caramida
                 sleep(1000);
                 //LegoStanga2.setPosition(0.5); //se ridica
                 //sleep(2000);
@@ -229,7 +230,7 @@ public class SensorColorALB extends LinearOpMode {
                 LegoDreapta1.setPosition(-0.7);
                 sleep(200);
 
-                Laterala(0.5, 3580);
+                Laterala(0.5, 3500);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -248,7 +249,7 @@ public class SensorColorALB extends LinearOpMode {
                 LegoDreapta2.setPosition(0.7); //se lasa ala mare lung
                 sleep(500);
 
-                Fata(0.3, -870);
+                Fata(0.3, -700);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -265,7 +266,7 @@ public class SensorColorALB extends LinearOpMode {
                 LegoDreapta1.setPosition(-0.7); //se lasa
                 sleep(500);
 
-                Fata(0.5, 470);
+                Fata(0.5, 550);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -381,7 +382,7 @@ public class SensorColorALB extends LinearOpMode {
 
             if(k==1)
             {nuvede=1;
-                Fata(0.3, 350);
+                Fata(0.3, 500);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -389,7 +390,7 @@ public class SensorColorALB extends LinearOpMode {
                     telemetry.addData("Pitch", angles.thirdAngle);
                     telemetry.update();
                 }
-                Laterala(0.8, -4610);
+                Laterala(0.8, -4550);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -410,7 +411,7 @@ public class SensorColorALB extends LinearOpMode {
                 LegoDreapta1.setPosition(-0.7);
                 sleep(200);
 
-                Laterala(0.5, 3000);
+                Laterala(0.5, 2850);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -444,7 +445,7 @@ public class SensorColorALB extends LinearOpMode {
                 sleep(100);
                 LegoDreapta1.setPosition(-0.7); //se lasa
                 sleep(300);
-                Fata(0.5, 550);
+                Fata(0.5, 650);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -458,7 +459,7 @@ public class SensorColorALB extends LinearOpMode {
                 MotorDJ.setPower(0);
                 sleep(100);
 
-                Laterala(0.8, -3600);
+                Laterala(0.8, -3200);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -518,7 +519,7 @@ public class SensorColorALB extends LinearOpMode {
                 LegoDreapta1.setPosition(-0.7);//agata caramida
                 sleep(500);
 
-                Fata(0.3, 350);
+                Fata(0.3, 430);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -526,7 +527,7 @@ public class SensorColorALB extends LinearOpMode {
                     telemetry.addData("Pitch", angles.thirdAngle);
                     telemetry.update();
                 }
-                Laterala(0.8, -4510);
+                Laterala(0.8, -4310);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -547,7 +548,7 @@ public class SensorColorALB extends LinearOpMode {
                 LegoDreapta1.setPosition(-0.7);
                 sleep(200);
 
-                Laterala(0.5, 2600);
+                Laterala(0.5, 2500);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -581,7 +582,7 @@ public class SensorColorALB extends LinearOpMode {
                 sleep(200);
 
                 LegoDreapta1.setPosition(-0.7); //se lasa
-                sleep(200);
+                sleep(600);
 
                 Fata(0.5, 650);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
@@ -597,7 +598,7 @@ public class SensorColorALB extends LinearOpMode {
                 MotorDJ.setPower(0);
                 sleep(100);
 
-                Laterala(0.8, -3000);
+                Laterala(0.8, -2800);
                 while (opModeIsActive() && !isStopRequested() && MotorSF.isBusy() && MotorSJ.isBusy() && MotorDF.isBusy() && MotorDJ.isBusy()) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     telemetry.addData("Heading: ", angles.firstAngle);
@@ -687,7 +688,7 @@ public class SensorColorALB extends LinearOpMode {
         MotorSJ.setPower(p);
         MotorDF.setPower(p);
         MotorDJ.setPower(p);
-        if((t-MotorDF.getCurrentPosition()<t-50) &&(t-MotorDJ.getCurrentPosition()<t-50) && (t-MotorSF.getCurrentPosition()<t-50)&&(t-MotorSJ.getCurrentPosition()<t-50))
+        if((t-MotorDF.getCurrentPosition()<t-150) &&(t-MotorDJ.getCurrentPosition()<t-150) && (t-MotorSF.getCurrentPosition()<t-150)&&(t-MotorSJ.getCurrentPosition()<t-150))
         {p=0;
             MotorDF.setPower(0);
             MotorDF.setPower(0);
@@ -739,7 +740,7 @@ public class SensorColorALB extends LinearOpMode {
         MotorDF.setPower(p);
         MotorDJ.setPower(p);
         if(t>0) {
-            if ((t - MotorDF.getCurrentPosition() > (t - 50)) && (t - MotorDJ.getCurrentPosition() < (t - 50)) && (t - MotorSF.getCurrentPosition() < (t - 50)) && (t - MotorSJ.getCurrentPosition() > (t - 50))) {
+            if ((t - MotorDF.getCurrentPosition() > (t - 150)) && (t - MotorDJ.getCurrentPosition() < (t - 150)) && (t - MotorSF.getCurrentPosition() < (t - 150)) && (t - MotorSJ.getCurrentPosition() > (t - 150))) {
                 p = 0;
                 MotorDF.setPower(0);
                 MotorDF.setPower(0);
@@ -748,7 +749,7 @@ public class SensorColorALB extends LinearOpMode {
             }
         }
         if(t<0) {
-            if ((t - MotorDF.getCurrentPosition() < (t - 50)) && (t - MotorDJ.getCurrentPosition() > (t - 50)) && (t - MotorSF.getCurrentPosition() > (t - 50)) && (t - MotorSJ.getCurrentPosition() < (t - 50))) {
+            if ((t - MotorDF.getCurrentPosition() < (t - 150)) && (t - MotorDJ.getCurrentPosition() > (t - 150)) && (t - MotorSF.getCurrentPosition() > (t - 150)) && (t - MotorSJ.getCurrentPosition() < (t - 150))) {
                 p = 0;
                 MotorDF.setPower(0);
                 MotorDF.setPower(0);
